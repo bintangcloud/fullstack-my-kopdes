@@ -29,8 +29,6 @@ export default function Dashboard() {
   } = useQuery({
     queryKey: ["user-products", page],
     queryFn: () => getProducts({ page }),
-    staleTime: 0,
-    refetchOnMount: true,
   });
 
   // Data produk dari Laravel paginate()

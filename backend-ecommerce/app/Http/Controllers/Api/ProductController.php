@@ -13,8 +13,9 @@ class ProductController extends Controller
     // Mengambil semua data produk untuk halaman Dashboard
     public function index(Request $request)
     {
-        $query = Product::with(['category', 'reviews'])
+        $query = Product::with('category')
             ->withCount('reviews')
+            ->withAvg('reviews', 'rating')
             ->withSum([
                 'orderItems as sold_count' => function ($query) {
                     $query->whereHas('order', function ($orderQuery) {
@@ -53,9 +54,7 @@ class ProductController extends Controller
                     'name' => $product->category->name ?? 'Tanpa Kategori',
                     'category' => $product->category->name ?? 'Tanpa Kategori',
                 ],
-                'avg_rating' => $product->reviews->count() > 0
-                    ? round($product->reviews->avg('rating'), 1)
-                    : 0,
+                'avg_rating' => round((float) ($product->reviews_avg_rating ?? 0), 1),
                 'reviews_count' => (int) ($product->reviews_count ?? 0),
                 'sold_count' => (int) ($product->sold_count ?? 0),
             ];

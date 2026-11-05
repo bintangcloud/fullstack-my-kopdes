@@ -137,6 +137,7 @@ class AdminController extends Controller
         $request->validate(['name' => 'required|string|unique:categories,name']);
         
         $category = Category::create(['name' => $request->name]);
+        \Illuminate\Support\Facades\Cache::forget('api_categories_list');
         return response()->json(['message' => 'Kategori ditambahkan', 'data' => $category], 201);
     }
 }

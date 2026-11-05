@@ -21,15 +21,17 @@ export default function NotificationDropdown({ isAdmin = false }) {
   const queryClient = useQueryClient();
   const { isAuthenticated } = useAuth();
 
-  // Polling data notifikasi setiap 6 detik
-  const { data } = useQuery({
+  // Polling data notifikasi setiap 60 detik (bukan 6 detik agar server tidak kewalahan)
+  const { data, refetch } = useQuery({
     queryKey: ["notifications", isAdmin],
     queryFn: async () => {
       const res = await apiClient.get("/notifications");
       return res.data;
     },
     enabled: isAuthenticated,
-    refetchInterval: 6000,
+    refetchInterval: 60000,
+    refetchOnWindowFocus: false,
+    staleTime: 30000,
   });
 
   const unreadCount = data?.unread_count || 0;
@@ -85,7 +87,10 @@ export default function NotificationDropdown({ isAdmin = false }) {
       {/* Tombol Bell Notifikasi */}
       <button
         type="button"
-        onClick={() => setIsOpen((prev) => !prev)}
+        onClick={() => {
+          if (!isOpen) refetch();
+          setIsOpen((prev) => !prev);
+        }}
         className="relative p-2 text-gray-600 hover:text-[#8B0000] hover:bg-red-50 rounded-full transition flex items-center justify-center"
         aria-label="Notifikasi Pesanan & Chat"
         title="Notifikasi"

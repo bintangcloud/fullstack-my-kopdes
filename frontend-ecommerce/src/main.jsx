@@ -16,8 +16,17 @@ import {
 
 import { Toaster } from "react-hot-toast";
 
-// Membuat Query Client
-const queryClient = new QueryClient();
+// Membuat Query Client dengan konfigurasi caching optimal
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 1000 * 60 * 3, // Data disimpan 3 menit tanpa re-fetch berulang
+      gcTime: 1000 * 60 * 10, // Cache bertahan di memori hingga 10 menit
+      refetchOnWindowFocus: false, // Jangan re-fetch otomatis saat tab browser dibuka kembali
+      retry: 1,
+    },
+  },
+});
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
