@@ -16,7 +16,10 @@ const resolveImageUrl = (img) => {
   if (img.startsWith("http://") || img.startsWith("https://") || img.startsWith("data:") || img.startsWith("blob:")) {
     return img;
   }
-  return `http://127.0.0.1:8000${img.startsWith("/") ? "" : "/"}${img}`;
+  const baseUrl = import.meta.env.VITE_API_BASE_URL
+    ? import.meta.env.VITE_API_BASE_URL.replace(/\/api\/?$/, "")
+    : "http://127.0.0.1:8000";
+  return `${baseUrl}${img.startsWith("/") ? "" : "/"}${img}`;
 };
 
 export default function ProductDetail() {
