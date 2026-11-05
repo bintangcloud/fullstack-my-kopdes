@@ -17,7 +17,9 @@ export default function MainLayout() {
     const fetchCategories = async () => {
       try {
         const response = await apiClient.get('/categories');
-        const raw = response.data || [];
+        const raw = Array.isArray(response.data)
+          ? response.data
+          : (Array.isArray(response.data?.data) ? response.data.data : []);
         const categoryNames = raw.map((c) => (typeof c === 'object' ? (c.name || c.category) : c));
         setDaftarKategori(["Semua Kategori", ...categoryNames]);
       } catch (error) {

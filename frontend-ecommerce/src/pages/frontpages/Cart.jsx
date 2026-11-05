@@ -5,6 +5,7 @@ import toast from "react-hot-toast";
 import { useCart } from "../../utils/CartContext";
 import BackButton from "../../components/BackButton";
 import Button from "../../components/Button";
+import { getSafeImageUrl } from "../../utils/imageHelper";
 
 export default function Cart() {
   const navigate = useNavigate();
@@ -85,7 +86,7 @@ export default function Cart() {
                       />
                       <div className="relative">
                         <img 
-                          src={item.img} 
+                          src={getSafeImageUrl(item.img)} 
                           alt={item.name} 
                           className={`w-24 h-24 sm:w-28 sm:h-28 object-cover rounded-xl transition-transform duration-300 ${isOutOrStock ? 'opacity-50 grayscale' : 'group-hover:scale-105'}`} 
                         />

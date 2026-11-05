@@ -37,6 +37,11 @@ class ProductController extends Controller
         $products = $query->paginate($perPage);
 
         $products->getCollection()->transform(function ($product) {
+            $img = $product->img;
+            if ($img && str_starts_with($img, 'http://') && !str_contains($img, 'localhost') && !str_contains($img, '127.0.0.1')) {
+                $img = preg_replace('/^http:/i', 'https:', $img);
+            }
+
             return [
                 'id' => $product->id,
                 'name' => $product->name,
@@ -44,8 +49,8 @@ class ProductController extends Controller
                 'price' => $product->price,
                 'stock' => $product->stock,
                 'description' => $product->description,
-                'img' => $product->img,
-                'img_url' => $product->img,
+                'img' => $img,
+                'img_url' => $img,
                 'category_id' => $product->category_id,
                 'category_name' => $product->category->name ?? 'Tanpa Kategori',
                 'category' => [
@@ -124,6 +129,11 @@ class ProductController extends Controller
                 ];
             });
 
+        $prodImg = $product->img;
+        if ($prodImg && str_starts_with($prodImg, 'http://') && !str_contains($prodImg, 'localhost') && !str_contains($prodImg, '127.0.0.1')) {
+            $prodImg = preg_replace('/^http:/i', 'https:', $prodImg);
+        }
+
         return response()->json([
             'id' => $product->id,
             'name' => $product->name,
@@ -131,8 +141,8 @@ class ProductController extends Controller
             'price' => $product->price,
             'stock' => $product->stock,
             'description' => $product->description,
-            'img' => $product->img,
-            'img_url' => $product->img,
+            'img' => $prodImg,
+            'img_url' => $prodImg,
             'category_id' => $product->category_id,
             'category_name' => $product->category->name ?? 'Tanpa Kategori',
             'category' => [

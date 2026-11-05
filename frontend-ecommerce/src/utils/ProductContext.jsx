@@ -19,8 +19,14 @@ export const ProductProvider = ({ children }) => {
 
   // GET ALL CATEGORIES (Untuk Dropdown di Form & Filter)
   const getCategories = async () => {
-    const res = await apiClient.get("/categories");
-    return res.data;
+    try {
+      const res = await apiClient.get("/categories");
+      if (Array.isArray(res.data)) return res.data;
+      if (Array.isArray(res.data?.data)) return res.data.data;
+      return [];
+    } catch {
+      return [];
+    }
   };
 
   // STORE CATEGORY (Tambah Kategori Baru)

@@ -10,16 +10,10 @@ import WarningAlert from "../../components/WarningAlert";
 import { Star, Lock, CheckCircle2, Camera, MessageSquare, Store, X } from "lucide-react";
 import apiClient from "../../utils/apiClient";
 import ConfirmModal from "../../components/ConfirmModal";
+import { getSafeImageUrl } from "../../utils/imageHelper";
 
 const resolveImageUrl = (img) => {
-  if (!img) return "";
-  if (img.startsWith("http://") || img.startsWith("https://") || img.startsWith("data:") || img.startsWith("blob:")) {
-    return img;
-  }
-  const baseUrl = import.meta.env.VITE_API_BASE_URL
-    ? import.meta.env.VITE_API_BASE_URL.replace(/\/api\/?$/, "")
-    : "http://127.0.0.1:8000";
-  return `${baseUrl}${img.startsWith("/") ? "" : "/"}${img}`;
+  return getSafeImageUrl(img);
 };
 
 export default function ProductDetail() {
@@ -308,7 +302,7 @@ const [reviews, setReviews] = useState([]);
         <div className="border border-gray-100 rounded-3xl p-6 md:p-8 shadow-sm bg-white">
           <div className="flex flex-col md:flex-row gap-8">
             <img 
-              src={p.img} 
+              src={getSafeImageUrl(p.img || p.img_url)} 
               alt={p.name} 
               className="w-full md:w-1/2 h-72 object-cover rounded-2xl border border-gray-100" 
             />

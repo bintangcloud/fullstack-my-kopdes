@@ -52,6 +52,9 @@ class AdminController extends Controller
             }
             $file->move($destination, $filename);
             $imgPath = url('uploads/' . $filename);
+            if (str_starts_with($imgPath, 'http://') && !str_contains($imgPath, 'localhost') && !str_contains($imgPath, '127.0.0.1')) {
+                $imgPath = preg_replace('/^http:/i', 'https:', $imgPath);
+            }
         } elseif ($request->filled('img') && is_string($request->img)) {
             $imgPath = $request->img;
         }
@@ -105,6 +108,9 @@ class AdminController extends Controller
             }
             $file->move($destination, $filename);
             $imgPath = url('uploads/' . $filename);
+            if (str_starts_with($imgPath, 'http://') && !str_contains($imgPath, 'localhost') && !str_contains($imgPath, '127.0.0.1')) {
+                $imgPath = preg_replace('/^http:/i', 'https:', $imgPath);
+            }
         } elseif ($request->filled('img') && is_string($request->img)) {
             $imgPath = $request->img;
         }

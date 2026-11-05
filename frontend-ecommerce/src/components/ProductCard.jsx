@@ -6,6 +6,7 @@ import toast from "react-hot-toast";
 import { Star, Plus } from "lucide-react";
 import Button from "./Button";
 import WarningAlert from "./WarningAlert";
+import { getSafeImageUrl } from "../utils/imageHelper";
 
 export default function ProductCard({ p }) {
   const { addToCart } = useCart();
@@ -42,7 +43,7 @@ export default function ProductCard({ p }) {
 
       <div>
         <div className="relative overflow-hidden rounded-xl mb-4 bg-gray-50 h-48">
-          <img src={p.img || p.img_url} alt={p.name} className="w-full h-full object-cover group-hover:scale-110 transition duration-500" />
+          <img src={getSafeImageUrl(p.img || p.img_url)} alt={p.name} className="w-full h-full object-cover group-hover:scale-110 transition duration-500" />
           <span className="absolute top-2 left-2 bg-white/90 backdrop-blur-sm text-[#8B0000] text-xs px-3 py-1.5 rounded-full font-bold shadow-sm">
             {p.category_name || p.category?.name || "Sembako"}
           </span>

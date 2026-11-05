@@ -5,6 +5,7 @@ import toast from "react-hot-toast";
 import { useProducts } from "../../utils/ProductContext";
 import { useAuth } from "../../utils/AuthContext";
 import apiClient from "../../utils/apiClient";
+import { getSafeImageUrl } from "../../utils/imageHelper";
 import ConfirmModal from "../../components/ConfirmModal";
 import {
   Package,
@@ -383,7 +384,7 @@ export default function AdminDashboard() {
               Semua Kategori
             </button>
 
-            {categories.map((cat, idx) => {
+            {(Array.isArray(categories) ? categories : []).map((cat, idx) => {
               const catId = typeof cat === "object" ? (cat.id ?? cat.category_id) : cat;
               const catName = typeof cat === "object" ? (cat.name ?? cat.category) : cat;
               const isSelected = String(selectedCategory) === String(catId);
@@ -454,7 +455,7 @@ export default function AdminDashboard() {
                         <div className="w-14 h-14 rounded-xl overflow-hidden bg-gray-100 border border-gray-200 flex-shrink-0 shadow-sm">
                           {p.img_url || p.img ? (
                             <img
-                              src={p.img_url || p.img}
+                              src={getSafeImageUrl(p.img_url || p.img)}
                               alt={p.name}
                               className="w-full h-full object-cover"
                             />

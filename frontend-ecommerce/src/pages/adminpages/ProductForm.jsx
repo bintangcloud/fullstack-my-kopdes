@@ -218,7 +218,7 @@ export default function ProductForm() {
             }`}
           >
             <option value="">-- Pilih Kategori Sembako --</option>
-            {categories.map((cat, idx) => {
+            {(Array.isArray(categories) ? categories : []).map((cat, idx) => {
               const catId = typeof cat === "object" ? (cat.id ?? cat.category_id) : cat;
               const catName = typeof cat === "object" ? (cat.name ?? cat.category) : cat;
               return (

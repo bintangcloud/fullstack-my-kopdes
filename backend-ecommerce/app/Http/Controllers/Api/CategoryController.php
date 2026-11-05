@@ -10,7 +10,7 @@ class CategoryController extends Controller
 {
     public function index()
     {
-        $categories = Cache::remember('api_categories_list', 600, function () {
+        $categories = Cache::remember('api_categories_list_v3', 600, function () {
             return Category::select('id', 'name')->get()->map(function ($cat) {
                 return [
                     'id' => $cat->id,
@@ -18,8 +18,19 @@ class CategoryController extends Controller
                     'name' => $cat->name,
                     'category' => $cat->name,
                 ];
-            });
+            })->values()->toArray();
         });
+
+        if (!is_array($categories)) {
+            $categories = Category::select('id', 'name')->get()->map(function ($cat) {
+                return [
+                    'id' => $cat->id,
+                    'category_id' => $cat->id,
+                    'name' => $cat->name,
+                    'category' => $cat->name,
+                ];
+            })->values()->toArray();
+        }
 
         return response()->json($categories);
     }

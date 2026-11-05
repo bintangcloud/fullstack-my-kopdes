@@ -50,6 +50,9 @@ class ReviewController extends Controller
             $fileName = time() . '_' . uniqid() . '.' . $request->file('image')->getClientOriginalExtension();
             $request->file('image')->move($destDir, $fileName);
             $imagePath = url('uploads/reviews/' . $fileName);
+            if (str_starts_with($imagePath, 'http://') && !str_contains($imagePath, 'localhost') && !str_contains($imagePath, '127.0.0.1')) {
+                $imagePath = preg_replace('/^http:/i', 'https:', $imagePath);
+            }
         } elseif ($request->boolean('remove_image')) {
             $imagePath = null;
         }
