@@ -9,7 +9,7 @@ const ProductContext = createContext();
 export const ProductProvider = ({ children }) => {
   const queryClient = useQueryClient();
 
-  // GET ALL PRODUCTS (Sudah mendukung Pagination & Pencarian)
+  // GET ALL PRODUCTS (Mendukung Pagination, Kategori, & Pencarian)
   const getProducts = async ({ page = 1, limit = 10, category_id = "", keyword = "" } = {}) => {
     const res = await apiClient.get(
       `/products?page=${page}&limit=${limit}&category_id=${category_id}&keyword=${keyword}`
@@ -17,26 +17,7 @@ export const ProductProvider = ({ children }) => {
     return res.data; 
   };
 
-  // GET ALL CATEGORIES (Untuk Dropdown di Form & Filter)
-  const getCategories = async () => {
-    try {
-      const res = await apiClient.get("/categories");
-      if (Array.isArray(res.data)) return res.data;
-      if (Array.isArray(res.data?.data)) return res.data.data;
-      return [];
-    } catch {
-      return [];
-    }
-  };
-
-  // STORE CATEGORY (Tambah Kategori Baru)
-  const addCategory = async (name) => {
-    const res = await apiClient.post("/categories", { name });
-    queryClient.invalidateQueries(["categories"]);
-    return res.data?.data || res.data;
-  };
-
-  // SHOW PRODUCT DETAIL (Untuk Form Edit)
+  // SHOW PRODUCT DETAIL (Untuk Form Edit & Halaman Detail)
   const getProductById = useCallback(async (id) => {
     const res = await apiClient.get(`/products/${id}`);
     return res.data?.data || res.data;
@@ -49,8 +30,7 @@ export const ProductProvider = ({ children }) => {
         headers: { "Content-Type": "multipart/form-data" },
       });
     },
-    // Refresh data otomatis setelah tambah berhasil
-    onSuccess: () => queryClient.invalidateQueries(["products"]),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["products"] }),
   });
 
   // UPDATE PRODUCT (Edit Produk)
@@ -59,8 +39,7 @@ export const ProductProvider = ({ children }) => {
       const response = await apiClient.post(`/admin/products/${id}?_method=PUT`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
-      // Refresh data otomatis setelah edit berhasil
-      queryClient.invalidateQueries(["products"]);
+      queryClient.invalidateQueries({ queryKey: ["products"] });
       return response;
     } catch (error) {
       throw error;
@@ -70,17 +49,13 @@ export const ProductProvider = ({ children }) => {
   // DELETE PRODUCT (Hapus Produk)
   const deleteProduct = useMutation({
     mutationFn: async (id) => await apiClient.delete(`/admin/products/${id}`),
-    // Refresh data otomatis setelah hapus berhasil
-    onSuccess: () => queryClient.invalidateQueries(["products"]),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["products"] }),
   });
 
-  // 3. Export semua fungsi agar bisa dipakai di AdminDashboard maupun User Dashboard
   return (
     <ProductContext.Provider
       value={{
         getProducts,
-        getCategories,
-        addCategory,
         getProductById,
         addProduct,
         updateProduct,
@@ -92,5 +67,11 @@ export const ProductProvider = ({ children }) => {
   );
 };
 
-// 4. Custom Hook untuk mempermudah pemanggilan di komponen
-export const useProducts = () => useContext(ProductContext);
+// 3. Custom Hook
+export const useProducts = () => {
+  const context = useContext(ProductContext);
+  if (!context) {
+    throw new Error("useProducts harus digunakan di dalam ProductProvider");
+  }
+  return context;
+};

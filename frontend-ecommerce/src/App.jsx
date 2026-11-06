@@ -7,9 +7,7 @@ import MainLayout from "./layouts/MainLayout";
 import AdminLayout from "./layouts/AdminLayout";
 import ProtectedRoute from "./components/ProtectedRoute";
 
-// ==========================================
 // IMPORT HALAMAN PENGUNJUNG
-// ==========================================
 import Dashboard from "./pages/frontpages/Dashboard";
 import ProductDetail from "./pages/frontpages/ProductDetail";
 import Cart from "./pages/frontpages/Cart";
@@ -39,9 +37,7 @@ export default function App() {
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register" element={<RegisterPage />} />
 
-      {/* ================================== */}
       {/* ROUTE TOKO DEPAN */}
-      {/* ================================== */}
       <Route path="/" element={<MainLayout />}>
         {/* Halaman Katalog Produk (Publik) */}
         <Route index element={<Dashboard />} />

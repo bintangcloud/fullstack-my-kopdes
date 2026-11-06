@@ -1,12 +1,14 @@
 import React, { useState } from "react";
 import { useProducts } from "../../utils/ProductContext";
+import { useCategory } from "../../utils/CategoryContext"; 
 import toast from "react-hot-toast";
 import { useNavigate, Link } from "react-router-dom";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Plus, FolderPlus, X, Check, Loader2 } from "lucide-react";
 
 export default function ProductForm() {
-  const { addProduct, getCategories, addCategory } = useProducts();
+  const { addProduct } = useProducts(); 
+  const { getCategories, addCategory } = useCategory(); 
   const queryClient = useQueryClient();
   const navigate = useNavigate();
 
@@ -55,8 +57,8 @@ export default function ProductForm() {
 
       toast.success(`Kategori "${newCategoryName.trim()}" berhasil ditambahkan!`);
 
-      // Refresh list kategori
-      await queryClient.invalidateQueries({ queryKey: ["categories"] });
+      // Refresh list kategori seketika
+      await queryClient.refetchQueries({ queryKey: ["categories"] });
 
       // Otomatis pilih kategori yang baru dibuat
       if (createdId) {

@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import { useProducts } from "../../utils/ProductContext";
+import { useCategory } from "../../utils/CategoryContext";
 import { useAuth } from "../../utils/AuthContext";
 import apiClient from "../../utils/apiClient";
 import { getSafeImageUrl } from "../../utils/imageHelper";
@@ -39,7 +40,8 @@ export default function AdminDashboard() {
   const [productToDelete, setProductToDelete] = useState(null);
   const { user } = useAuth();
 
-  const { getProducts, getCategories, deleteProduct } = useProducts();
+  const { getProducts, deleteProduct } = useProducts();
+  const { getCategories } = useCategory();
 
   // Ambil data kategori
   const { data: categories = [] } = useQuery({

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useProducts } from "../../utils/ProductContext";
+import { useCategory } from "../../utils/CategoryContext"; 
 import toast from "react-hot-toast";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
@@ -9,7 +10,8 @@ export default function ProductEdit() {
   const { id } = useParams();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const { updateProduct, getProductById, getCategories, addCategory } = useProducts();
+  const { updateProduct, getProductById } = useProducts();
+  const { getCategories, addCategory } = useCategory(); 
 
   const [formData, setFormData] = useState({
     name: "",
@@ -92,8 +94,8 @@ export default function ProductEdit() {
 
       toast.success(`Kategori "${newCategoryName.trim()}" berhasil ditambahkan!`);
 
-      // Refresh list kategori
-      await queryClient.invalidateQueries({ queryKey: ["categories"] });
+      // Refresh list kategori seketika
+      await queryClient.refetchQueries({ queryKey: ["categories"] });
 
       // Otomatis pilih kategori yang baru dibuat
       if (createdId) {

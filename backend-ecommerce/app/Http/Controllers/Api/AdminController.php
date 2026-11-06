@@ -34,6 +34,7 @@ class AdminController extends Controller
         if (!$categoryId && $request->filled('category_name')) {
             $cat = Category::firstOrCreate(['name' => $request->category_name]);
             $categoryId = $cat->id;
+            \Illuminate\Support\Facades\Cache::forget('api_categories_list_v3');
         }
 
         if (!$categoryId) {
@@ -95,6 +96,7 @@ class AdminController extends Controller
         } elseif ($request->filled('category_name')) {
             $cat = Category::firstOrCreate(['name' => $request->category_name]);
             $categoryId = $cat->id;
+            \Illuminate\Support\Facades\Cache::forget('api_categories_list_v3');
         }
 
         // Handle gambar
@@ -143,7 +145,19 @@ class AdminController extends Controller
         $request->validate(['name' => 'required|string|unique:categories,name']);
         
         $category = Category::create(['name' => $request->name]);
+
+        // Hapus semua cache kategori agar langsung muncul di dropdown katalog & admin
+        \Illuminate\Support\Facades\Cache::forget('api_categories_list_v3');
         \Illuminate\Support\Facades\Cache::forget('api_categories_list');
-        return response()->json(['message' => 'Kategori ditambahkan', 'data' => $category], 201);
+
+        return response()->json([
+            'message' => 'Kategori ditambahkan',
+            'data' => [
+                'id' => $category->id,
+                'category_id' => $category->id,
+                'name' => $category->name,
+                'category' => $category->name,
+            ]
+        ], 201);
     }
 }

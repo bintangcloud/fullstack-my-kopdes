@@ -1,4 +1,3 @@
-
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
@@ -8,6 +7,7 @@ import "./index.css";
 import { AuthProvider } from "./utils/AuthContext";
 import { CartProvider } from "./utils/CartContext";
 import { ProductProvider } from "./utils/ProductContext";
+import { CategoryProvider } from "./utils/CategoryContext"; 
 
 import {
   QueryClient,
@@ -20,9 +20,9 @@ import { Toaster } from "react-hot-toast";
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      staleTime: 1000 * 60 * 3, // Data disimpan 3 menit tanpa re-fetch berulang
-      gcTime: 1000 * 60 * 10, // Cache bertahan di memori hingga 10 menit
-      refetchOnWindowFocus: false, // Jangan re-fetch otomatis saat tab browser dibuka kembali
+      staleTime: 1000 * 60 * 3,
+      gcTime: 1000 * 60 * 10,
+      refetchOnWindowFocus: false,
       retry: 1,
     },
   },
@@ -33,16 +33,14 @@ ReactDOM.createRoot(document.getElementById("root")).render(
     <BrowserRouter>
       <QueryClientProvider client={queryClient}>
         <AuthProvider>
-          <ProductProvider>
-            <CartProvider>
-              <App />
-              {/* Notifikasi Toast */}
-              <Toaster
-                position="top-right"
-                reverseOrder={false}
-              />
-            </CartProvider>
-          </ProductProvider>
+          <CategoryProvider>
+            <ProductProvider>
+              <CartProvider>
+                <App />
+                <Toaster position="top-right" reverseOrder={false} />
+              </CartProvider>
+            </ProductProvider>
+          </CategoryProvider>
         </AuthProvider>
       </QueryClientProvider>
     </BrowserRouter>
