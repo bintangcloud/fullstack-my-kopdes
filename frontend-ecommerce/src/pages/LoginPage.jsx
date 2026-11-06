@@ -178,7 +178,7 @@ export default function LoginPage() {
         {/* Quick Demo Credentials */}
         <div className="mt-6 pt-5 border-t border-gray-100">
           <p className="text-[11px] font-bold uppercase tracking-wider text-gray-400 mb-2.5 text-center">
-            Akun Demo (Klik Langsung Masuk):
+            Akun Demo:
           </p>
           <div className="grid grid-cols-2 gap-2.5">
             <button
